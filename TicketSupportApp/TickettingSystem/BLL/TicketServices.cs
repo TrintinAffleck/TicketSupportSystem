@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,11 @@ namespace TicketSystem.BLL
 
         public List<Ticket> GetAllTickets()
         {
-            return _ticketSupportContext.Tickets.Select(a => a).ToList();
+            return _ticketSupportContext.Tickets.Select(a => a)
+                .Include(t=>t.Status)
+                .Include(t=>t.Customer)
+                .Include(t=>t.AssignedAgent)
+                .ToList();
         }
     }
 }
