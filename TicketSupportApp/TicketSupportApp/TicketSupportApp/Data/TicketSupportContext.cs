@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TicketSupportApp.Models;
 
-public partial class TicketSupportContext : DbContext
+internal partial class TicketSupportContext : DbContext
 {
     public TicketSupportContext(DbContextOptions<TicketSupportContext> options)
         : base(options)
