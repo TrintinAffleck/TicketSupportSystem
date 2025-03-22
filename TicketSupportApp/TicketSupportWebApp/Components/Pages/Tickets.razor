@@ -1,5 +1,6 @@
 ﻿@page "/tickets";
 @using MudBlazor;
+@using TicketSystem.Models;
 <h3>ticket</h3>
 <MudDataGrid Items="tickets">
 	<Columns>
@@ -8,9 +9,8 @@
 		<PropertyColumn Property="x=>x.Description"></PropertyColumn>
 		<PropertyColumn Property="x=>x.Status.StatusName"></PropertyColumn>
 		<PropertyColumn Property="x=>x.Category"></PropertyColumn>
-		<PropertyColumn Property="x=>x.CustomerID"></PropertyColumn>
-		<PropertyColumn Property="x=>x.AssignedAgentID"></PropertyColumn>
-
+		<PropertyColumn Property="x=>x.Customer.NormalizedEmail"></PropertyColumn>
+		<PropertyColumn Property="x=>x.AssignedAgent.NormalizedEmail"></PropertyColumn>
 	</Columns>
 </MudDataGrid>
 
