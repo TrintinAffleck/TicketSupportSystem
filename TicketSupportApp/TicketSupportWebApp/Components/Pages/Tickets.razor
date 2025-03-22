@@ -1,0 +1,17 @@
+﻿@page "/tickets";
+@using MudBlazor;
+<h3>ticket</h3>
+<MudDataGrid Items="tickets">
+	<Columns>
+		<PropertyColumn Property="x=>x.TicketID"></PropertyColumn>
+		<PropertyColumn Property="x=>x.Subject"></PropertyColumn>
+		<PropertyColumn Property="x=>x.Description"></PropertyColumn>
+		<PropertyColumn Property="x=>x.Status.StatusName"></PropertyColumn>
+		<PropertyColumn Property="x=>x.Category"></PropertyColumn>
+		<PropertyColumn Property="x=>x.CustomerID"></PropertyColumn>
+		<PropertyColumn Property="x=>x.AssignedAgentID"></PropertyColumn>
+
+	</Columns>
+</MudDataGrid>
+
+
