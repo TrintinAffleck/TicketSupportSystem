@@ -33,10 +33,7 @@ public partial class Ticket
 
     public int PriorityID { get; set; }
 
-    [Required]
-    [StringLength(50)]
-    [Unicode(false)]
-    public string Category { get; set; }
+    public int Category { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime CreatedAt { get; set; }
@@ -53,6 +50,10 @@ public partial class Ticket
     [ForeignKey("AssignedAgentID")]
     [InverseProperty("TicketAssignedAgents")]
     public virtual AspNetUser AssignedAgent { get; set; }
+
+    [ForeignKey("Category")]
+    [InverseProperty("Tickets")]
+    public virtual TicketCategory CategoryNavigation { get; set; }
 
     [ForeignKey("CustomerID")]
     [InverseProperty("TicketCustomers")]
