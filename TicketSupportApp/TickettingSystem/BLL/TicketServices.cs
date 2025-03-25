@@ -26,5 +26,10 @@ namespace TicketSystem.BLL
                 .Include(t=>t.AssignedAgent)
                 .ToList();
         }
+        public List<TicketCategory> GetTicketCategories()
+        {
+            return _ticketSupportContext.TicketCategories.Select(a => a)
+                .ToList();
+        }
     }
 }
