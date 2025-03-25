@@ -28,6 +28,8 @@ public partial class TicketSupportContext : DbContext
 
     public virtual DbSet<Ticket> Tickets { get; set; }
 
+    public virtual DbSet<TicketCategory> TicketCategories { get; set; }
+
     public virtual DbSet<TicketComment> TicketComments { get; set; }
 
     public virtual DbSet<TicketPriority> TicketPriorities { get; set; }
@@ -71,6 +73,10 @@ public partial class TicketSupportContext : DbContext
 
             entity.HasOne(d => d.AssignedAgent).WithMany(p => p.TicketAssignedAgents).HasConstraintName("FK__Tickets__Assigne__6383C8BA");
 
+            entity.HasOne(d => d.CategoryNavigation).WithMany(p => p.Tickets)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Tickets__Categor__71D1E811");
+
             entity.HasOne(d => d.Customer).WithMany(p => p.TicketCustomers)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Tickets__Custome__628FA481");
@@ -82,6 +88,11 @@ public partial class TicketSupportContext : DbContext
             entity.HasOne(d => d.Status).WithMany(p => p.Tickets)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Tickets__StatusI__6477ECF3");
+        });
+
+        modelBuilder.Entity<TicketCategory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__TicketCa__3214EC07CF92564C");
         });
 
         modelBuilder.Entity<TicketComment>(entity =>
