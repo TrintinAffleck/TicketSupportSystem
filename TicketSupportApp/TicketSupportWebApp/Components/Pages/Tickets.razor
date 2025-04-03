@@ -2,38 +2,52 @@
 
 @using MudBlazor;
 @using TicketSystem.Models;
+@using TicketSystem.ViewModels;
 <h3>All Tickets</h3>
 @if (tickets.Count <= 0)
 {
 	<p>No tickets found.</p>
 }
 else {
-<MudDataGrid Items="tickets" EditMode="DataGridEditMode.Cell" ReadOnly=false>
+<MudDataGrid T="TicketView" Items="tickets" EditMode="DataGridEditMode.Cell" ReadOnly=false>
 	<Columns>
 		<PropertyColumn Property="x=>x.TicketID" Editable=false></PropertyColumn>
 		<PropertyColumn Property="x=>x.Subject"></PropertyColumn>
 		<PropertyColumn Property="x=>x.Description"></PropertyColumn>
 		<PropertyColumn Property="x=>x.Status.StatusName">
+			<EditTemplate>
+				<InputSelect @bind-Value="@context.Item.StatusID" style="width: 140px; height: 50px; border-radius: 3px; padding: 5px; background-color:lightgray">
+					<option value="0">Select a Status...</option>
+					@foreach (var status in statuses)
+					{
+						<option value="@status.StatusID">@status.StatusName</option>
+					}
+				</InputSelect>
+			</EditTemplate>
 
 		</PropertyColumn>
-		<PropertyColumn Property="x=>x.CategoryNavigation.CategoryName">
+		<PropertyColumn Property="x=>x.Category.CategoryName">
 			<EditTemplate>
-				<MudSelect @bind-Value="context.Item.Category" Required RequiredError="Please select a category!">
+				@* <MudSelect @bind-Value="context.Item.Category" Required RequiredError="Please select a category!">
 					@foreach (TicketCategory category in categories)
 					{
-						<MudSelectItem Value="context.Item.Category">@category.CategoryName</MudSelectItem>
+						//<MudSelectItem Value="category.Id">@category.CategoryName</MudSelectItem>
 					}
-				</MudSelect>
+				</MudSelect> *@
+				<InputSelect @bind-Value="@context.Item.CategoryID" style="width: 140px; height: 50px; border-radius: 3px; padding: 5px; background-color:lightgray">
+					<option value="0">Select a Category...</option>
+					@foreach (var category in categories)
+					{
+						<option value="@category.Id">@category.CategoryName</option>
+					}
+				</InputSelect>
 			</EditTemplate>
 		</PropertyColumn>
-		<PropertyColumn Property="x=>x.Category.ToString()"></PropertyColumn>
 		<PropertyColumn Property="x=>x.Customer.NormalizedEmail"></PropertyColumn>
-		<PropertyColumn Property="x=>x.AssignedAgent.NormalizedEmail"></PropertyColumn>
 		<TemplateColumn CellClass="d-flex justify-end">
             <CellTemplate>
                 <MudButton
-				property="x=>x"
-				Href="@($"/ticket/{context.Item}")"				
+				OnClick="()=>{}"			
 				Size="@Size.Small" 
 				Variant="@Variant.Filled" 
 				Color="@Color.Primary">Go To Ticket</MudButton>
