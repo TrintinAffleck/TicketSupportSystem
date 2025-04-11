@@ -16,7 +16,7 @@ else {
 		<PropertyColumn Property="x=>x.Description"></PropertyColumn>
 		<PropertyColumn Property="x=>x.Status.StatusName">
 			<EditTemplate>
-				<InputSelect @bind-Value="@context.Item.StatusID" style="width: 140px; height: 50px; border-radius: 3px; padding: 5px; background-color:lightgray">
+				<InputSelect @bind-Value="@context.Item.StatusID" style="width: auto; height: auto; border-radius: 3px; padding: 5px; background-color:lightgray">
 					<option value="0">Select a Status...</option>
 					@foreach (var status in statuses)
 					{
@@ -26,7 +26,7 @@ else {
 			</EditTemplate>
 
 		</PropertyColumn>
-		<PropertyColumn Property="x=>x.Category.CategoryName">
+		<PropertyColumn Property="x=>x.Category.CategoryName" Editable>
 			<EditTemplate>
 				@* <MudSelect @bind-Value="context.Item.Category" Required RequiredError="Please select a category!">
 					@foreach (TicketCategory category in categories)
@@ -34,7 +34,7 @@ else {
 						//<MudSelectItem Value="category.Id">@category.CategoryName</MudSelectItem>
 					}
 				</MudSelect> *@
-				<InputSelect @bind-Value="@context.Item.CategoryID" style="width: 140px; height: 50px; border-radius: 3px; padding: 5px; background-color:lightgray">
+				<InputSelect @bind-Value="@context.Item.CategoryID" style="width: auto; height: auto; border-radius: 3px; padding: 0px; background-color:lightgray">
 					<option value="0">Select a Category...</option>
 					@foreach (var category in categories)
 					{
@@ -43,19 +43,20 @@ else {
 				</InputSelect>
 			</EditTemplate>
 		</PropertyColumn>
-		<PropertyColumn Property="x=>x.Customer.NormalizedEmail"></PropertyColumn>
-		<TemplateColumn CellClass="d-flex justify-end">
-            <CellTemplate>
-                <MudButton
-				OnClick="()=>{}"			
-				Size="@Size.Small" 
-				Variant="@Variant.Filled" 
-				Color="@Color.Primary">Go To Ticket</MudButton>
-            </CellTemplate>
-        </TemplateColumn>
+		<TemplateColumn Sortable=true CellClass="d-flex justify-end" Context="context">
+			<EditTemplate>
+				<MudButton 
+					OnClick="()=>Save(context.Item.TicketID)"
+					Size="@Size.Small" 
+					Variant="@Variant.Filled" 
+					Color="@Color.Primary"
+				>GoTo</MudButton>
+			</EditTemplate>
+		</TemplateColumn>
+
 	</Columns>
 </MudDataGrid>
-<p>Selected Id: </p>
+<p>Selected Id: @test</p>
 }
 
 
