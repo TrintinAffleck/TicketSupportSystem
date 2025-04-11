@@ -50,6 +50,12 @@ namespace TicketSystem.BLL
             return _ticketSupportContext.TicketCategories.Select(a => a)
                 .ToList();
         }
+
+        public List<TicketStatus> GetTicketStatuses()
+        {
+            return _ticketSupportContext.TicketStatuses.Select(a => a)
+                .ToList();
+        }
         public string SaveTicket(int ticketId)
         {
             if (ticketId == 0) return $"No ticket for ticket {ticketId}";
