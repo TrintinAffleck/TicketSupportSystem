@@ -56,12 +56,28 @@ namespace TicketSystem.BLL
             return _ticketSupportContext.TicketStatuses.Select(a => a)
                 .ToList();
         }
-        public string SaveTicket(int ticketId)
+        public string SaveTicket(TicketView ticket)
         {
-            if (ticketId == 0) return $"No ticket for ticket {ticketId}";
+            if (ticket.TicketID <= 0) return $"No ticket for ticket {ticket.TicketID}";
+            Ticket ticketToUpdate = _ticketSupportContext.Tickets
+                .Select(a=>a)
+                .Where(t=>t.TicketID == ticket.TicketID)
+                .First();
+            if (ticketToUpdate == null) return "No ticket found";
+            ticketToUpdate.TicketID = ticket.TicketID;
+            ticketToUpdate.Subject = ticket.Subject;
+            ticketToUpdate.AssignedAgentID = ticket.AssignedAgentID;
+            ticketToUpdate.Description = ticket.Description;
+            ticketToUpdate.Category = ticket.CategoryID;
+            ticketToUpdate.CategoryNavigation = ticket.Category;
+            ticketToUpdate.StatusID = ticket.StatusID;
+            ticketToUpdate.Status = ticket.Status;
+            ticketToUpdate.TicketComments = ticket.CommentList;
+            ticketToUpdate.UpdatedAt = DateTime.Now;
             try
             {
-                Ticket ticketToUpdate = _ticketSupportContext.Tickets.Select(a=>a).Where(t=>t.TicketID == ticketId).First();
+
+
                 _ticketSupportContext.Update(ticketToUpdate);
                 _ticketSupportContext.SaveChanges();
                 return "";
