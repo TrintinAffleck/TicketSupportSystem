@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore.Design.Internal;
+using MudBlazor;
 using TicketSystem.BLL;
 using TicketSystem.Models;
 using TicketSystem.ViewModels;
@@ -17,7 +19,7 @@ namespace TicketSupportWebApp.Components.Pages
 		List<TicketCategory> categories = [];
 		List<TicketStatus> statuses = new List<TicketStatus>();
 
-		string test = "";
+		TicketView test;
 
 		protected override async Task OnInitializedAsync()
 		{
@@ -27,15 +29,16 @@ namespace TicketSupportWebApp.Components.Pages
 			await base.OnInitializedAsync();
 		}
 
-		private void Save(int ticketId)
+		private void Save(TicketView ticket)
 		{
-			test = $"TicketId = {ticketId}";
-			//ticketServices.SaveTicket(ticketId);
+			
+			ticketServices.SaveTicket(ticket);
 		}
 
-		private void EditTicket(Ticket ticket)
+		private void OnCategoryChange(TicketView ticketView)
 		{
-			navigationManager.NavigateTo($"/ticket/{ticket.TicketID}");
+			test = ticketView;
+			Console.WriteLine(ticketView.Category);
 		}
 
 		

@@ -16,47 +16,51 @@ else {
 		<PropertyColumn Property="x=>x.Description"></PropertyColumn>
 		<PropertyColumn Property="x=>x.Status.StatusName">
 			<EditTemplate>
-				<InputSelect @bind-Value="@context.Item.StatusID" style="width: auto; height: auto; border-radius: 3px; padding: 5px; background-color:lightgray">
-					<option value="0">Select a Status...</option>
+				<MudSelect @bind-Value="@context.Item.StatusID" >
 					@foreach (var status in statuses)
 					{
-						<option value="@status.StatusID">@status.StatusName</option>
+						<MudSelectItem Value="@status.StatusID">@status.StatusName</MudSelectItem>
 					}
-				</InputSelect>
+				</MudSelect>
 			</EditTemplate>
 
 		</PropertyColumn>
 		<PropertyColumn Property="x=>x.Category.CategoryName" Editable>
 			<EditTemplate>
-				@* <MudSelect @bind-Value="context.Item.Category" Required RequiredError="Please select a category!">
+				<MudSelect @bind-Value="context.Item.CategoryID" >
 					@foreach (TicketCategory category in categories)
 					{
-						//<MudSelectItem Value="category.Id">@category.CategoryName</MudSelectItem>
+						<MudSelectItem Value="category.Id">@category.CategoryName</MudSelectItem>
 					}
-				</MudSelect> *@
-				<InputSelect @bind-Value="@context.Item.CategoryID" style="width: auto; height: auto; border-radius: 3px; padding: 0px; background-color:lightgray">
-					<option value="0">Select a Category...</option>
-					@foreach (var category in categories)
-					{
-						<option value="@category.Id">@category.CategoryName</option>
-					}
-				</InputSelect>
+				</MudSelect>
 			</EditTemplate>
 		</PropertyColumn>
 		<TemplateColumn Sortable=true CellClass="d-flex justify-end" Context="context">
 			<EditTemplate>
 				<MudButton 
-					OnClick="()=>Save(context.Item.TicketID)"
+					StartIcon="@Icons.Material.Filled.Save"
+					OnClick="()=>Save(context.Item)"
 					Size="@Size.Small" 
 					Variant="@Variant.Filled" 
 					Color="@Color.Primary"
-				>GoTo</MudButton>
+					Disabled=false
+				>Save</MudButton>
 			</EditTemplate>
+			<CellTemplate></CellTemplate>
 		</TemplateColumn>
 
 	</Columns>
 </MudDataGrid>
-<p>Selected Id: @test</p>
+
+	<p>@if (test != null)
+		{
+			<span>@test.Category</span>
+		}
+		else
+		{
+			<span>Test is null</span>
+		}
+	</p>
 }
 
 
