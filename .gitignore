@@ -289,3 +289,5 @@ __pycache__/
 *.xsd.cs
 
 *.sln
+/TicketSupportApp/TickettingSystem/TicketSystem.csproj
+/TicketSupportApp/TickettingSystem/efpt.config.json
