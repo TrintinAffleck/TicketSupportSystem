@@ -1,9 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using TicketSystem.DAL;
 using TicketSystem.Models;
 using TicketSystem.ViewModels;
@@ -56,36 +51,56 @@ namespace TicketSystem.BLL
             return _ticketSupportContext.TicketStatuses.Select(a => a)
                 .ToList();
         }
-        public string SaveTicket(TicketView ticket)
+        public async Task<Ticket> SaveTicket(TicketView ticket)
         {
-            if (ticket.TicketID <= 0) return $"No ticket for ticket {ticket.TicketID}";
-            Ticket ticketToUpdate = _ticketSupportContext.Tickets
-                .Select(a=>a)
-                .Where(t=>t.TicketID == ticket.TicketID)
-                .First();
-            if (ticketToUpdate == null) return "No ticket found";
-            ticketToUpdate.TicketID = ticket.TicketID;
-            ticketToUpdate.Subject = ticket.Subject;
-            ticketToUpdate.AssignedAgentID = ticket.AssignedAgentID;
-            ticketToUpdate.Description = ticket.Description;
-            ticketToUpdate.Category = ticket.CategoryID;
-            ticketToUpdate.CategoryNavigation = ticket.Category;
-            ticketToUpdate.StatusID = ticket.StatusID;
-            ticketToUpdate.Status = ticket.Status;
-            ticketToUpdate.TicketComments = ticket.CommentList;
-            ticketToUpdate.UpdatedAt = DateTime.Now;
+            List<string> errorList = new List<string>();
+
+            if (ticket == null)
+            {
+                errorList.Add("Ticket is null.");
+
+                //TODO Refactor for a new Ticket; give this attributes; 
+                //TicketView newTicket = new TicketView();
+            }
+
+            if (ticket.TicketID <= 0)
+            {
+                errorList.Add($"No ticket for ticket {ticket.TicketID}");
+            }
+            
             try
             {
+			    Ticket ticketToUpdate = _ticketSupportContext.Tickets
+				    .Select(a => a)
+				    .Where(t => t.TicketID == ticket.TicketID)
+				    .First();
 
+			    ticketToUpdate.TicketID = ticket.TicketID;
+                ticketToUpdate.Subject = ticket.Subject;
+                ticketToUpdate.AssignedAgentID = ticket.AssignedAgentID;
+                ticketToUpdate.Description = ticket.Description;
+                ticketToUpdate.Category = ticket.CategoryID;
+                ticketToUpdate.CategoryNavigation = ticket.Category;
+                ticketToUpdate.StatusID = ticket.StatusID;
+                ticketToUpdate.Status = ticket.Status;
+                ticketToUpdate.TicketComments = ticket.CommentList;
+                ticketToUpdate.UpdatedAt = DateTime.Now;
 
                 _ticketSupportContext.Update(ticketToUpdate);
-                _ticketSupportContext.SaveChanges();
-                return "";
+                await _ticketSupportContext.SaveChangesAsync();
+                return ticketToUpdate;
             }
-            catch (Exception ex)
+            catch (ArgumentNullException ex)
             {
-                return ex.Message.ToString();
+                errorList.Add(ex.Message);
+                return null;
             }
+            catch (InvalidOperationException ex)
+            {
+				errorList.Add(ex.Message);
+				return null;
+            }
+
         }
     }
 }
