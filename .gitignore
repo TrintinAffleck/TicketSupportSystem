@@ -291,3 +291,4 @@ __pycache__/
 *.sln
 /TicketSupportApp/TickettingSystem/TicketSystem.csproj
 /TicketSupportApp/TickettingSystem/efpt.config.json
+/TicketSupportApp/TicketSupportWebApp/TicketSupportWebApp.csproj
