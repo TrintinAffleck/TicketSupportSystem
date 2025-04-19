@@ -15,12 +15,13 @@ namespace TicketSupportWebApp.Components.Pages
 		[Inject]
 		NavigationManager? NavigationManager { get; set; }
 
-		List<TicketView> tickets = [];
+		List<TicketView>? tickets = null;
 		List<TicketCategory> categories = [];
 		List<TicketStatus> statuses = new List<TicketStatus>();
 		List<string> errors = new List<string>();
-
-		TicketView test;
+		private TicketView test;
+		private MudForm ticketForm;
+		private bool isTicketsLoading = true;
 
 		protected override async Task OnInitializedAsync()
 		{
@@ -34,7 +35,11 @@ namespace TicketSupportWebApp.Components.Pages
 			}
 			try
 			{
-				tickets = TicketServices.GetAllTickets();
+				tickets = await TicketServices.GetAllTickets();
+				if (tickets != null)
+				{
+					isTicketsLoading = false;
+				}
 				categories = TicketServices.GetTicketCategories();
 				statuses = TicketServices.GetTicketStatuses();
 			}
@@ -47,24 +52,34 @@ namespace TicketSupportWebApp.Components.Pages
 			await base.OnInitializedAsync();
 		}
 
-		private void Save(TicketView ticket)
+		private static string Validate(ref string stringToValidate)
+		{
+			if (stringToValidate == null || stringToValidate == "")
+			{
+				return "Subject cannot be empty!";
+			}
+			
+			return null;
+		}
+
+		private async void Save(TicketView ticket)
 		{
 			try
 			{
-				TicketServices.SaveTicket(ticket);
+				await TicketServices.SaveTicket(ticket);
 			}
 			catch (ArgumentException ex)
 			{
 				errors.Add(Utils.GetInnerException(ex).Message);
 			}
-
+			
 		}
 
-		
+		private void PrintSomething()
+		{
+			Console.WriteLine("Printed Something");
+		}
 
-		
-
-		
 	}
 }
 
