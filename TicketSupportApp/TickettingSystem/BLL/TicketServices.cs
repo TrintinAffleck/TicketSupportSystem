@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
+using System.Timers;
 using TicketSystem.DAL;
 using TicketSystem.Models;
 using TicketSystem.ViewModels;
@@ -14,9 +16,9 @@ namespace TicketSystem.BLL
             _ticketSupportContext = context;
         }
 
-        public List<TicketView> GetAllTickets()
+        public async Task<List<TicketView>> GetAllTickets()
         {
-            return _ticketSupportContext.Tickets.Select(a => new TicketView
+            return await _ticketSupportContext.Tickets.Select(a => new TicketView
             {
                 TicketID = a.TicketID,
                 Subject = a.Subject,
@@ -37,7 +39,7 @@ namespace TicketSystem.BLL
                 SLA_DueDate = a.SLA_DueDate,
                 CommentList = a.TicketComments.Select(a=>a).ToList<TicketComment>(),
             })
-            .ToList<TicketView>();
+            .ToListAsync<TicketView>();
                 
         }
         public List<TicketCategory> GetTicketCategories()
