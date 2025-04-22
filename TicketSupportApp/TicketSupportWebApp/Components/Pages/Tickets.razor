@@ -7,51 +7,57 @@
 	<Authorized>
 		<h3>All Tickets</h3>
 		
-		
-		<MudForm @ref=ticketForm>
-			<MudDataGrid 
-					T="TicketView" 
-					Items="tickets" 
-					EditMode="DataGridEditMode.Cell" 
-					ReadOnly=false 
-					DragDropColumnReordering=true  
-					Dense 
-					ColumnResizeMode="ResizeMode.Container"
-					Validator="ticketForm"
-					Bordered=true
-					CommittedItemChanges="@Save"
-					Loading="@isTicketsLoading"
-			>
-				<Columns>
-					<PropertyColumn Property="x=>x.TicketID" Editable=false ></PropertyColumn>
-					<PropertyColumn Property="x=>x.Subject" ></PropertyColumn>
-					<PropertyColumn Property="x=>x.Description"></PropertyColumn>
-					<PropertyColumn Property="x=>x.Status.StatusName">
-						<EditTemplate >
-							<MudSelect @bind-Value="@context.Item.StatusID" Variant="Variant.Outlined" Margin="Margin.Normal" >
-								@foreach (var status in statuses)
-								{
-									<MudSelectItem Value="@status.StatusID">@status.StatusName</MudSelectItem>
-								}
-							</MudSelect>
-						</EditTemplate>
+		@if (isTicketsLoading)
+		{
+			<MudProgressCircular Color="Color.Primary" Indeterminate=true></MudProgressCircular>
+		}
+		else
+		{
+			
+			<MudForm @ref=ticketForm>
+				<MudDataGrid 
+						T="TicketView" 
+						Items="tickets" 
+						EditMode="DataGridEditMode.Cell" 
+						ReadOnly=false 
+						DragDropColumnReordering=true  
+						Dense 
+						ColumnResizeMode="ResizeMode.Container"
+						Validator="ticketForm"
+						Bordered=true
+						CommittedItemChanges="@Save"
+						Loading="@isTicketsLoading"
+				>
+					<Columns>
+						<PropertyColumn Property="x=>x.TicketID" Editable=false ></PropertyColumn>
+						<PropertyColumn Property="x=>x.Subject" ></PropertyColumn>
+						<PropertyColumn Property="x=>x.Description"></PropertyColumn>
+						<PropertyColumn Property="x=>x.Status.StatusName">
+							<EditTemplate >
+								<MudSelect @bind-Value="@context.Item.StatusID" Variant="Variant.Outlined" Margin="Margin.Normal" >
+									@foreach (var status in statuses)
+									{
+										<MudSelectItem Value="@status.StatusID">@status.StatusName</MudSelectItem>
+									}
+								</MudSelect>
+							</EditTemplate>
 
-					</PropertyColumn>
-					<PropertyColumn Property="x=>x.Category.CategoryName" Editable>
-						<EditTemplate>
-							<MudSelect @bind-Value="context.Item.CategoryID" Variant="Variant.Outlined">
-								@foreach (TicketCategory category in categories)
-								{
-									<MudSelectItem Value="category.Id">@category.CategoryName</MudSelectItem>
-								}
-							</MudSelect>
-						</EditTemplate>
-					</PropertyColumn>
+						</PropertyColumn>
+						<PropertyColumn Property="x=>x.Category.CategoryName" Editable>
+							<EditTemplate>
+								<MudSelect @bind-Value="context.Item.CategoryID" Variant="Variant.Outlined">
+									@foreach (TicketCategory category in categories)
+									{
+										<MudSelectItem Value="category.Id">@category.CategoryName</MudSelectItem>
+									}
+								</MudSelect>
+							</EditTemplate>
+						</PropertyColumn>
 
-				</Columns>
-			</MudDataGrid>
-		</MudForm>
-		
+					</Columns>
+				</MudDataGrid>
+			</MudForm>
+		}
 		<footer>
 			
 			@if (errors.Count > 0)
