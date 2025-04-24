@@ -292,3 +292,5 @@ __pycache__/
 /TicketSupportApp/TickettingSystem/TicketSystem.csproj
 /TicketSupportApp/TickettingSystem/efpt.config.json
 /TicketSupportApp/TicketSupportWebApp/TicketSupportWebApp.csproj
+/TicketSupportApp/UserServices/UserServices.csproj
+/TicketSupportApp/UserServices/UserServices - Backup.csproj
