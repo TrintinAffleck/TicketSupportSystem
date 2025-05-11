@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore.Design.Internal;
 using MudBlazor;
+using UserServices.BLL;
 using TicketSystem.BLL;
 using TicketSystem.Models;
 using TicketSystem.ViewModels;
 using Utilities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Mono.TextTemplating;
 namespace TicketSupportWebApp.Components.Pages
 {
 	public partial class Tickets : ComponentBase
@@ -16,34 +16,31 @@ namespace TicketSupportWebApp.Components.Pages
 		[Inject]
 		NavigationManager? NavigationManager { get; set; }
 
+		[Inject]
+		UserService? UserServices { get; set; }
+
 		IEnumerable<TicketView>? tickets = null;
 		List<TicketCategory> categories = [];
-		List<TicketStatus> statuses = new List<TicketStatus>();
-		List<string> errors = new List<string>();
-		private MudDataGrid<TicketView> dataGrid;
-		private MudForm ticketForm;
+		List<TicketStatus> statuses = [];
+		readonly List<string> errors = [];
+		List<AspNetUser> users = [];
+		private MudDataGrid<TicketView>? dataGrid;
+		private MudForm? ticketForm;
 		private bool isTicketsLoading = true;
 		private string? searchString = null;
 		protected override async Task OnInitializedAsync()
 		{
-			if (TicketServices == null)
-			{
-				throw new ArgumentNullException("Ticket Services is not available.");
-			}
-			if (NavigationManager == null)
-			{
-				throw new ArgumentNullException("Navigation Manager is not available.");
-			}
-
+			ArgumentNullException.ThrowIfNull(UserServices);
+			ArgumentNullException.ThrowIfNull(TicketServices);
+			ArgumentNullException.ThrowIfNull(NavigationManager);
+			users = await UserServices.GetAllUsers();
 			await base.OnInitializedAsync();
+
 		}
 
-		private async Task<GridData<TicketView>> LoadTickets(GridState<TicketView> state)
+		private async Task<GridData<TicketView>>? LoadTickets(GridState<TicketView> state)
 		{
-			if (state == null)
-			{
-				throw new ArgumentNullException("state is null");
-			}
+			ArgumentNullException.ThrowIfNull(state);
 			try
 			{
 				tickets = await TicketServices.GetAllTickets();
@@ -51,9 +48,9 @@ namespace TicketSupportWebApp.Components.Pages
 				{
 					isTicketsLoading = false;
 				}
-				categories = TicketServices.GetTicketCategories();
-				statuses = TicketServices.GetTicketStatuses();
-
+				categories = await TicketServices.GetTicketCategories();
+				statuses = await TicketServices.GetTicketStatuses();
+				
 				tickets = tickets.Where(ticket =>
 				{
 					if (string.IsNullOrWhiteSpace(searchString))
