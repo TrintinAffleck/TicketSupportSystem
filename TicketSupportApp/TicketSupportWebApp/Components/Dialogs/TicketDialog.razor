@@ -1,0 +1,67 @@
+﻿@using TicketSystem.ViewModels;
+@using TicketSystem.Models;
+@using TicketSystem.BLL;
+@using Utilities;
+<MudDialog>
+	<DialogContent>
+		<MudForm @ref="_createForm" Model="_newTicketView" Validated="OnValidated">
+			<MudText Typo="Typo.h6">Create New Ticket</MudText>
+
+			<MudTextField @bind-Value="_newTicketView.Subject" Label="Subject" Required="true" RequiredError="Subject is required" />
+
+			<MudTextField @bind-Value="_newTicketView.Description" Label="Description" Required="true" RequiredError="Description is required" />
+
+			<MudSelect T="int" @bind-Value="_newTicketView.Status.StatusID" Label="Status" Required="true" RequiredError="Please select a status">
+				@foreach (var status in _statuses)
+				{
+					<MudSelectItem Value="@status.StatusID">@status.StatusName</MudSelectItem>
+				}
+			</MudSelect>
+
+			<MudSelect T="int" @bind-Value="_newTicketView.CategoryID" Label="Category" Required="true" RequiredError="Please select a category">
+				@foreach (var category in _categories)
+				{
+					<MudSelectItem Value="@category.Id">@category.CategoryName</MudSelectItem>
+				}
+			</MudSelect>
+		</MudForm>
+	</DialogContent>
+
+	<DialogActions>
+		<MudButton Color="Color.Primary" OnClick="OnNewTicketSubmit">Submit</MudButton>
+		<MudButton Color="Color.Secondary" OnClick="OnNewTicketCancel">Cancel</MudButton>
+	</DialogActions>
+</MudDialog>
+@code {
+
+	[CascadingParameter]
+	MudDialog MudDialog { get; set; }
+
+	[Inject]
+	private TicketServices? _TicketServices { get; set; }
+
+	private MudForm? _createForm;
+
+	private List<TicketCategory> _categories = [];
+	private List<TicketStatus> _statuses = [];
+	private readonly List<string> _errors = [];
+
+	TicketView? _newTicketView { get; set; }
+
+	private async void OnNewTicketCancel()
+	{
+		await MudDialog.CloseAsync();
+	}
+
+	private async void OnNewTicketSubmit()
+	{
+		try
+		{
+			await _TicketServices.SaveTicket(_newTicketView);
+		}
+		catch (ArgumentException ex)
+		{
+			_errors.Add(Utils.GetInnerException(ex).Message);
+		}
+	}
+}
